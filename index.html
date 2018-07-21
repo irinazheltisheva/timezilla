@@ -7,7 +7,7 @@
 <style>
    * 
    {
-      width: 400px;
+      width: 100%;
       padding: 0;
 	  margin: 0;
    }
@@ -44,12 +44,13 @@
         localStorage.content = $('#sometask').html();
      });
 	 $( "#buttontask" ).click(function() {
-        $('select').on('change', function (e) {
-           var optionSelected = $("option:selected", this);
-           var valueSelected = this.value;
-		   this.value = $('#tasktext').html();
+        //$('select').on('change', function (e) {
+           //var optionSelected = $("option:selected", this);
+           //var valueSelected = this.value;
+		   //this.value = $('#tasktext').html();
+	   $("#sometask").html() = $("#tasktext").html();	 
            //....
-      });
+      //});
      });
    });
 </script>
