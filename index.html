@@ -38,6 +38,110 @@
    console.log("echo intel:20%/80% time management echo echo");
    $(document).ready(function() {
     // Handler for .ready() called.
+	   
+	   var config = {
+      client_id: '1042144653652',
+      scope: 'https://www.googleapis.com/auth/tasks https://www.googleapis.com/auth/tasks.readonly',
+      immediate: false
+      //https://www.googleapis.com/auth/calendar
+      /*
+        CLIENT ID: "523599907403-ffcoo765o55657e800la6u0q0shjrsna.apps.googleusercontent.com"
+        CLIENT SECRET: "cm23NaipeIMFMLkGZ60XN-V8"
+        1042144653652.apps.googleusercontent.com
+        CLIENT SECRET 2: "Bjh5mZbir2Y3w72dw3H-uUHS"
+        TOKEN URI: "https://accounts.google.com/o/oauth2/token"
+        API KEY для серверной части: "AIzaSyC02CDvRcI9S3LgBMbM4UspEHQCU52GLVw"
+        API KEY для клиентской части: "AIzaSyBUeyybOQLmfOlEXsHT0kBf9tmX9BYLGU8"
+        var request = gapi.client.tasks.tasks.list({'tasklist': '@default'});
+        request.execute(function(resp) { console.log(resp); });
+      */
+};
+
+$('#tasks').hide();
+
+function handleClientLoad()
+{
+     gapi.client.setApiKey('AIzaSyAajCCGpWJfjGHqGZIIxFjPlBZaRo6Cd8I');
+     window.setTimeout(checkAuth, 100);
+}
+
+
+function checkAuth() 
+{
+     gapi.auth.authorize(config, function(){
+         console.log('login complete');
+         tasksLoad();
+     });
+
+      //var request = gapi.client.tasks.tasks.get({'tasklist': '@default', 'task': 'TimeZilla'});
+      //request.execute(function(resp) { console.log(resp); });
+}
+
+function tasksLoad()
+{
+     gapi.client.load('tasks','v1', function() {
+          //Loaded
+          var request = gapi.client.tasks.tasks.list({'tasklist': '@default'});
+
+          request.execute(function(resp) 
+          { 
+              console.log(resp);
+
+              var n = resp.items.length;
+
+              var itemlist;
+
+              for(var i=0; i<n-1; i++)
+              {
+                  var title = resp.items[i].title;
+
+                  itemlist = '<li><a href="#">' + title + '</a></li>';
+
+                  $('#tasks').append(itemlist);
+              }
+
+              $('#tasks').show();
+
+              jQuery('#tasks li').hover(function()
+              {
+                  jQuery(this).addClass('task-hover');
+              }, function()
+              {
+                  jQuery(this).removeClass('task-hover');
+              });
+
+          });
+     });
+     
+}
+
+function handleAuthResult()
+{
+     //handleAuthResult
+}
+
+/*function calendarLoad()
+{
+     gapi.client.load('calendar','v3');
+}*/
+
+var mykey = 'AIzaSyBUeyybOQLmfOlEXsHT0kBf9tmX9BYLGU8'; // typically like Gtg-rtZdsreUr_fLfhgPfgff
+var calendarid = 'progamailism@gmail.com'; // will look somewhat like 3ruy234vodf6hf4sdf5sd84f@group.calendar.google.com
+
+$.ajax({
+    type: 'GET',
+    url: encodeURI('https://www.googleapis.com/calendar/v3/calendars/' + calendarid+ '/events?key=' + mykey),
+    dataType: 'json',
+    success: function (response) {
+        //do whatever you want with each
+        console.log(response);
+        console.log(response.items.summary);
+    },
+    error: function (response) {
+        //tell that an error has occurred
+        console.log(response);
+    }
+});
 	 localStorage.content = $('#sometask').html();
 	 $('#sometask').html(localStorage.content);
 	 $( "#buttonsave" ).click(function() {
@@ -74,7 +178,8 @@
 	</textarea>	
 	<button id="buttontask">Изменить</button>
 	<button id="buttonsave">Сохранить</button>
-  </div>
+	  <div id="tasks"></div>
+   </div>
    
 </body>
 </html><!-- Amir Ismagilov, progamailism@gmail.com -->
